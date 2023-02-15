@@ -1,32 +1,68 @@
 import Head from "next/head";
+import moment from "moment";
+import Link from "next/link";
+import { getSlugOfNextItem } from "@/utils/db-helper/getSlugOfNextItem";
+import { getSlugOfPreviousItem } from "@/utils/db-helper/getSlugOfPreviousItem";
+import { useEffect, useState } from "react";
 
 export default function Post({ fetchedData }) {
-  console.log(fetchedData.length);
+  const [nextSlug, setNextSlug] = useState("");
+  const [previousSlug, setPreviousSlug] = useState("");
+
   const data = fetchedData.length > 0 && fetchedData.length < 2 ? fetchedData[0] : false;
 
   if (!data) return <p>Fehler beim laden der Daten!</p>;
 
+  useEffect(() => {
+    async function getSlugs() {
+      const slug = await getSlugOfNextItem("https://cms.web-craft.design/api/rezensionen", data.id);
+      if (slug) setNextSlug(`/rezensionen/${slug}`);
+
+      const previousSlug = await getSlugOfPreviousItem("https://cms.web-craft.design/api/rezensionen", data.id);
+      if (previousSlug) setPreviousSlug(`/rezensionen/${previousSlug}`);
+    }
+
+    getSlugs();
+  }, [data.id]);
+
+  const rating = [...new Array(5)].map((star, index) => {
+    return index < data.attributes.rating ? <i key={index} className="bi bi-star-fill text-primary text-5xl mr-3"></i> : <i className="bi bi-star"></i>;
+  });
   //console.log(data);
   return (
     <>
       <Head>
         <title>Rezension {data.attributes.companyName}</title>
       </Head>
-      <div className="container mx-auto grid grid-cols-3 grid-rows-2 gap-10 mb-52">
-        <div className="row-span-2 bg-primary text-primary-100 flex justify-center items-center rounded-full shadow-lg shadow-primary-700">1</div>
-        <div className="bg-primary text-primary-100 flex justify-center items-center">2</div>
-        <div className="bg-primary text-primary-100 flex justify-center items-center">3</div>
+      <div className="p-10 bg-primary-100 text-primary-300 container m-auto shadow-lg shadow-primary/50">
+        <div className="mb-10 flex flex-col">
+          <div className="flex self-end -mb-10">{rating}</div>
+          <p>Datum: {moment(data.attributes.reviewDate).format("DD.MM.Y")}</p>
+          <p className="text-2xl">
+            {data.attributes.firstName} {data.attributes.lastName} aus {data.attributes.city}{" "}
+          </p>
+          <p className="font-bold">{data.attributes.companyName}</p>
+        </div>
+
+        <div className="p-20 bg-primary-900 text-primary-100 text-center mb-10 rounded-lg">{data.attributes.content}</div>
+
+        <div className={`${previousSlug && nextSlug ? "flex justify-between" : ""} ${!previousSlug && nextSlug ? "w-full text-end" : ""}`}>
+          {previousSlug && (
+            <Link href={previousSlug}>
+              <i className="bi bi-arrow-left mr-3"></i>
+
+              <span>Vorherige Rezension anzeigen</span>
+            </Link>
+          )}
+
+          {nextSlug && (
+            <Link href={nextSlug} className="text-end">
+              <span>Nächste Rezension anzeigen</span>
+              <i className="bi bi-arrow-right ml-3"></i>
+            </Link>
+          )}
+        </div>
       </div>
-      <p className="bg-primary-100 text-primary/50 text-9xl font-bold text-center container mx-auto p-40 shadow-lg shadow-primary/50">{data.attributes.firstName}</p>
-      <div className="grid grid-cols-2 hover:grid-cols-6">
-        <p>Hallo</p>
-        <p>2</p>
-        <p>3</p>
-        <p>4</p>
-        <p>4</p>
-        <p>4</p>
-      </div>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
     </>
   );
 }
@@ -48,13 +84,7 @@ export async function getStaticPaths() {
 
 // This also gets called at build time
 export async function getStaticProps({ params }) {
-  const res = await fetch(`https://cms.web-craft.design/api/rezensionen?filters[slug][$eq]=${params.slug}`, {
-    method: "GET",
-    headers: {
-      Authorization:
-        "Bearer 89b135e7b3c8f19122eb4fb4711ebda972ef301ad957ee71d3d0b053b51c981de638417cd64b119ccd2a8ea4e2e81226b4ed237d4c096cec01a75aec8207fab56d7949b4ef7b3c9fdda999e3b9418040145498866e6c612f783b98a83ce3f07ad1491017f08aa740106cfdbe7bbd868ad132135bd80d1c583b46b9e6921cb22f",
-    },
-  });
+  const res = await fetch(`https://cms.web-craft.design/api/rezensionen?filters[slug][$eq]=${params.slug}`);
   const result = await res.json();
   const data = result.data;
 
