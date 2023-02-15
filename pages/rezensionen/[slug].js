@@ -6,14 +6,11 @@ import { getSlugOfPreviousItem } from "@/utils/db-helper/getSlugOfPreviousItem";
 import { useEffect, useState } from "react";
 
 export default function Post({ fetchedData }) {
-  const [nextSlug, setNextSlug] = useState("");
-  const [previousSlug, setPreviousSlug] = useState("");
-
   const data = fetchedData.length > 0 && fetchedData.length < 2 ? fetchedData[0] : false;
 
-  if (!data) {
-    return <p>Fehler beim laden der Daten!</p>;
-  }
+  if (!data) return <p>Fehler beim laden der Daten!</p>;
+  const [nextSlug, setNextSlug] = useState("");
+  const [previousSlug, setPreviousSlug] = useState("");
 
   useEffect(() => {
     async function getSlugs() {
