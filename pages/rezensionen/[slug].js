@@ -11,7 +11,9 @@ export default function Post({ fetchedData }) {
 
   const data = fetchedData.length > 0 && fetchedData.length < 2 ? fetchedData[0] : false;
 
-  if (!data) return <p>Fehler beim laden der Daten!</p>;
+  if (!data) {
+    return <p>Fehler beim laden der Daten!</p>;
+  }
 
   useEffect(() => {
     async function getSlugs() {
