@@ -7,22 +7,24 @@ import { useEffect, useState } from "react";
 
 export default function Post({ fetchedData }) {
   const data = fetchedData.length > 0 && fetchedData.length < 2 ? fetchedData[0] : false;
-
-  if (!data) return <p>Fehler beim laden der Daten!</p>;
   const [nextSlug, setNextSlug] = useState("");
   const [previousSlug, setPreviousSlug] = useState("");
 
-  useEffect(() => {
-    async function getSlugs() {
-      const slug = await getSlugOfNextItem("https://cms.web-craft.design/api/rezensionen", data.id);
-      if (slug) setNextSlug(`/rezensionen/${slug}`);
+  if (!data) {
+    return <p>Fehler beim laden der Daten!</p>;
+  } else {
+    useEffect(() => {
+      async function getSlugs() {
+        const slug = await getSlugOfNextItem("https://cms.web-craft.design/api/rezensionen", data.id);
+        if (slug) setNextSlug(`/rezensionen/${slug}`);
 
-      const previousSlug = await getSlugOfPreviousItem("https://cms.web-craft.design/api/rezensionen", data.id);
-      if (previousSlug) setPreviousSlug(`/rezensionen/${previousSlug}`);
-    }
+        const previousSlug = await getSlugOfPreviousItem("https://cms.web-craft.design/api/rezensionen", data.id);
+        if (previousSlug) setPreviousSlug(`/rezensionen/${previousSlug}`);
+      }
 
-    getSlugs();
-  }, [data.id]);
+      getSlugs();
+    }, [data.id]);
+  }
 
   const rating = [...new Array(5)].map((star, index) => {
     return index < data.attributes.rating ? <i key={index} className="bi bi-star-fill text-primary text-5xl mr-3"></i> : <i className="bi bi-star"></i>;
