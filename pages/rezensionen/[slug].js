@@ -1,28 +1,11 @@
 import Head from "next/head";
 import moment from "moment";
 import Link from "next/link";
-import { getSlugOfNextItem } from "@/utils/db-helper/getSlugOfNextItem";
-import { getSlugOfPreviousItem } from "@/utils/db-helper/getSlugOfPreviousItem";
-import { useEffect, useState } from "react";
+import { getData } from "@/utils/db-queries/getData";
+import { getDataBySlug } from "../../utils/db-queries/getData";
 
-export default function Post({ fetchedData }) {
-  const data = fetchedData.length > 0 && fetchedData.length < 2 ? fetchedData[0] : false;
-  const [nextSlug, setNextSlug] = useState("");
-  const [previousSlug, setPreviousSlug] = useState("");
-
-  useEffect(() => {
-    if (!data) return <p>Fehler beim laden der Daten!</p>;
-
-    async function getSlugs() {
-      const slug = await getSlugOfNextItem("https://cms.web-craft.design/api/rezensionen", data.id);
-      if (slug) setNextSlug(`/rezensionen/${slug}`);
-
-      const previousSlug = await getSlugOfPreviousItem("https://cms.web-craft.design/api/rezensionen", data.id);
-      if (previousSlug) setPreviousSlug(`/rezensionen/${previousSlug}`);
-    }
-
-    getSlugs();
-  }, [data.id]);
+export default function Post({ fetchedData, nextPost, previousPost }) {
+  const data = fetchedData;
 
   const rating = [...new Array(5)].map((star, index) => {
     return index < data.attributes.rating ? <i key={index} className="bi bi-star-fill text-primary text-5xl mr-3"></i> : <i className="bi bi-star"></i>;
@@ -45,17 +28,15 @@ export default function Post({ fetchedData }) {
 
         <div className="p-20 bg-primary-900 text-primary-100 text-center mb-10 rounded-lg">{data.attributes.content}</div>
 
-        <div className={`${previousSlug && nextSlug ? "flex justify-between" : ""} ${!previousSlug && nextSlug ? "w-full text-end" : ""}`}>
-          {previousSlug && (
-            <Link href={previousSlug}>
+        <div className={`${previousPost && nextPost ? "flex justify-between" : ""} ${!previousPost && nextPost ? "w-full text-end" : ""}`}>
+          {previousPost && (
+            <Link href={previousPost}>
               <i className="bi bi-arrow-left mr-3"></i>
-
               <span>Vorherige Rezension anzeigen</span>
             </Link>
           )}
-
-          {nextSlug && (
-            <Link href={nextSlug} className="text-end">
+          {nextPost && (
+            <Link href={nextPost} className="text-end">
               <span>Nächste Rezension anzeigen</span>
               <i className="bi bi-arrow-right ml-3"></i>
             </Link>
@@ -69,10 +50,10 @@ export default function Post({ fetchedData }) {
 // This function gets called at build time
 export async function getStaticPaths() {
   // Call an external API endpoint to get posts
-  const res = await fetch("https://cms.web-craft.design/api/rezensionen");
-  const results = await res.json();
+  const data = await getData("/rezensionen");
+
   // Get the paths we want to pre-render based on posts
-  const paths = results.data.map((post) => ({
+  const paths = data.map((post) => ({
     params: { slug: post.attributes.slug },
   }));
 
@@ -83,10 +64,16 @@ export async function getStaticPaths() {
 
 // This also gets called at build time
 export async function getStaticProps({ params }) {
-  const res = await fetch(`https://cms.web-craft.design/api/rezensionen?filters[slug][$eq]=${params.slug}`);
-  const result = await res.json();
-  const data = result.data;
+  const data = await getDataBySlug("/rezensionen", params.slug);
+  var previousPost = false;
+  var nextPost = false;
+
+  const previousPostsSlug = await getData(`/rezensionen/${Number(data.id) - 1}`);
+  const nextPostsSlug = await getData(`/rezensionen/${Number(data.id) + 1}`);
+
+  if (previousPostsSlug) previousPost = `/rezensionen/${previousPostsSlug.attributes.slug}`;
+  if (nextPostsSlug) nextPost = `/rezensionen/${nextPostsSlug.attributes.slug}`;
 
   // Pass post data to the page via props
-  return { props: { fetchedData: data } };
+  return { props: { fetchedData: data, nextPost, previousPost } };
 }
