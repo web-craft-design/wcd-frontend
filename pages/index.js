@@ -4,6 +4,7 @@ import { Inter } from "@next/font/google";
 import { getData } from "@/utils/db-queries/getData";
 import HeroVideo from "@/components/HeroVideo.js";
 import ReviewGrid from "@/components/reviews/ReviewGrid.js";
+import BigText from "@/components/gsap/BigText.js";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,16 +21,19 @@ export default function Home({ fetchedData }) {
       <main>
         <HeroVideo data={fetchedData.attributes.hero[0]} />
         <section className="container py-40">
+          <BigText>Hallo!</BigText>
           <LogoGrid />
         </section>
 
         <section className="container">
-          <p className="text-center lg:text-start font-extrabold text-primary uppercase mb-10 text-5xl lg:text-9xl">Modernstes Techstack trifft Design</p>
+          <p className="heading text-center lg:text-start font-extrabold text-primary uppercase mb-10 text-5xl lg:text-9xl">Modernstes Techstack trifft Design</p>
+          <BigText>Modernstes Techstack trifft Design</BigText>
+
           <Features />
         </section>
 
         <section className="container flex flex-col">
-          <p className="max-w-[700px] self-end text-center lg:text-end font-extrabold text-primary uppercase mb-10 text-5xl lg:text-9xl">Lerne uns kennen!</p>
+          <p className="heading max-w-[700px] self-end text-center lg:text-end font-extrabold text-primary uppercase mb-10 text-5xl lg:text-9xl">Lerne uns kennen!</p>
           <Team />
         </section>
 
