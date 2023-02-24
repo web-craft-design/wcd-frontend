@@ -1,12 +1,9 @@
 import Head from "next/head";
 import Image from "next/image";
-import { Inter } from "@next/font/google";
 import { getData } from "@/utils/db-queries/getData";
 import HeroVideo from "@/components/HeroVideo.js";
 import ReviewGrid from "@/components/reviews/ReviewGrid.js";
 import BigText from "@/components/gsap/BigText.js";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default function Home({ fetchedData }) {
   return (
@@ -18,22 +15,19 @@ export default function Home({ fetchedData }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
+      <main className="overflow-hidden">
         <HeroVideo data={fetchedData.attributes.hero[0]} />
         <section className="container py-40">
-          <BigText>Hallo!</BigText>
           <LogoGrid />
         </section>
 
         <section className="container">
-          <p className="heading text-center lg:text-start font-extrabold text-primary uppercase mb-10 text-5xl lg:text-9xl">Modernstes Techstack trifft Design</p>
           <BigText>Modernstes Techstack trifft Design</BigText>
-
           <Features />
         </section>
 
         <section className="container flex flex-col">
-          <p className="heading max-w-[700px] self-end text-center lg:text-end font-extrabold text-primary uppercase mb-10 text-5xl lg:text-9xl">Lerne uns kennen!</p>
+          <BigText position="end">Lerne uns Kennen!</BigText>
           <Team />
         </section>
 
@@ -42,16 +36,19 @@ export default function Home({ fetchedData }) {
         </section>
 
         <section className="container">
-          <p className="pt-40 text-center lg:text-start font-extrabold text-primary uppercase mb-10 text-5xl lg:text-9xl">Frisch aus der Redaktion</p>
+          <BigText>Frisch aus der Redaktion</BigText>
           <BlogPosts />
         </section>
 
-        <section className="container py-40 flex flex-wrap lg:flex-nowrap lg:gap-8 px-8">
-          <div className="min-w-full md:min-w-[25%]">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Rezensionen</h2>
-            <p className="mt-6 text-lg leading-8 text-gray-600">Was zufriedene Kunden und Partner über uns berichten:</p>{" "}
+        <section className="container">
+          <BigText position="end">Was der Pöbel sagt</BigText>
+          <div className="flex flex-wrap lg:flex-nowrap lg:gap-8 px-8">
+            <div className="min-w-full md:min-w-[25%]">
+              <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Rezensionen</h2>
+              <p className="mt-6 text-lg leading-8 text-gray-600">Was zufriedene Kunden und Partner über uns berichten:</p>{" "}
+            </div>
+            <ReviewGrid data={fetchedData.reviews} />
           </div>
-          <ReviewGrid data={fetchedData.reviews} />
         </section>
       </main>
     </>
@@ -76,16 +73,16 @@ function LogoGrid() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <h2 className="text-center text-lg font-semibold leading-8 text-gray-900">Unsere Kunden sind nicht nur unsere Kunden, sondern unsere Partner</h2>
         <div className="mx-auto mt-10 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-5">
-          <img className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/transistor-logo-gray-900.svg" alt="Transistor" width={158} height={48} />
-          <img className=" col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/reform-logo-gray-900.svg" alt="Reform" width={158} height={48} />
-          <img className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
-          <img className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
-          <img className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
-          <img className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
-          <img className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
-          <img className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
-          <img className="col-span-2 max-h-12 w-full object-contain sm:col-start-2 lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/savvycal-logo-gray-900.svg" alt="SavvyCal" width={158} height={48} />
-          <img className="col-span-2 col-start-2 max-h-12 w-full object-contain sm:col-start-auto lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/statamic-logo-gray-900.svg" alt="Statamic" width={158} height={48} />
+          <Image className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/transistor-logo-gray-900.svg" alt="Transistor" width={158} height={48} />
+          <Image className=" col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/reform-logo-gray-900.svg" alt="Reform" width={158} height={48} />
+          <Image className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
+          <Image className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
+          <Image className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
+          <Image className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
+          <Image className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
+          <Image className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
+          <Image className="col-span-2 max-h-12 w-full object-contain sm:col-start-2 lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/savvycal-logo-gray-900.svg" alt="SavvyCal" width={158} height={48} />
+          <Image className="col-span-2 col-start-2 max-h-12 w-full object-contain sm:col-start-auto lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/statamic-logo-gray-900.svg" alt="Statamic" width={158} height={48} />
         </div>
       </div>
     </div>
@@ -133,8 +130,8 @@ function Features() {
               </dl>
             </div>
           </div>
-          <img
-            src="https://tailwindui.com/img/component-images/dark-project-app-screenshot.png"
+          <Image
+            src="https://cms.web-craft.design/uploads/dark_project_app_screenshot_438a71cb88.png"
             alt="Product screenshot"
             className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
             width={2432}
@@ -311,7 +308,7 @@ function classNames(...classes) {
 
 function BlogPosts() {
   return (
-    <div className="bg-white px-6 pt-16 pb-20 lg:px-8 lg:pt-24 lg:pb-28">
+    <div className="bg-white px-6 pb-20 lg:px-8 lg:pb-28">
       <div className="relative mx-auto max-w-lg divide-y-2 divide-gray-200 lg:max-w-7xl">
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Recent publications</h2>
