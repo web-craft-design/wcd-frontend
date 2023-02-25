@@ -18,7 +18,7 @@ export default function BigText({ children, tag, position }) {
 
     const mm = gsap.matchMedia();
 
-    mm.add("(max-width: 799px)", () => {
+    mm.add("(max-width: 899px)", () => {
       tl.fromTo(
         headingRef.current,
         {
@@ -31,10 +31,23 @@ export default function BigText({ children, tag, position }) {
           duration: 1,
         }
       );
+
+      tl.fromTo(
+        headingRef.current,
+        {
+          color: "transparent",
+          textStroke: "2px #3f00b5",
+        },
+        {
+          textStroke: "0px #3f00b5",
+          color: "#3f00b5",
+          duration: 0.5,
+        }
+      );
     });
 
     // Desktop
-    mm.add("(min-width: 800px)", () => {
+    mm.add("(min-width: 900px)", () => {
       tl.fromTo(
         headingRef.current,
         {
@@ -47,20 +60,20 @@ export default function BigText({ children, tag, position }) {
           duration: 1,
         }
       );
-    });
 
-    tl.fromTo(
-      headingRef.current,
-      {
-        color: "transparent",
-        textStroke: "5px #3f00b5",
-      },
-      {
-        textStroke: "0px #3f00b5",
-        color: "#3f00b5",
-        duration: 0.5,
-      }
-    );
+      tl.fromTo(
+        headingRef.current,
+        {
+          color: "transparent",
+          textStroke: "5px #3f00b5",
+        },
+        {
+          textStroke: "0px #3f00b5",
+          color: "#3f00b5",
+          duration: 0.5,
+        }
+      );
+    });
 
     //tl.duration(3);
   }, []);

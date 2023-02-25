@@ -1,9 +1,10 @@
 import Head from "next/head";
 import Image from "next/image";
 import { getData } from "@/utils/db-queries/getData";
-import HeroVideo from "@/components/HeroVideo.js";
 import ReviewGrid from "@/components/reviews/ReviewGrid.js";
 import BigText from "@/components/gsap/BigText.js";
+
+const baseURL = "https://cms.web-craft.design/";
 
 export default function Home({ fetchedData }) {
   return (
@@ -16,30 +17,32 @@ export default function Home({ fetchedData }) {
       </Head>
 
       <main className="overflow-hidden">
-        <HeroVideo data={fetchedData.attributes.hero[0]} />
-        <section className="container py-40">
-          <LogoGrid />
-        </section>
+        <div className="container-fluid flex flex-col relative justify-end md:h-[90vh] items-center">
+          <video autoPlay muted loop className=" w-full h-full object-cover md:absolute top-0 left-0" src={baseURL + fetchedData.attributes.heroVideo.data.attributes.url}></video>
+          <div className=" w-[40% md:-mt-20 p-5 md:p-10 text-center z-10">
+            <h1 className="text-primary-300 uppercase font-bold">web-design & web-entwicklung</h1>
+            <p className="md:text-white text-3xl md:text-5xl uppercase font-medium">web-craft.design</p>
+          </div>
+        </div>
 
+        <section className="container py-40">
+          <LogoGrid data={fetchedData.attributes.logoGrid.data} />
+        </section>
         <section className="container">
           <BigText>Modernstes Techstack trifft Design</BigText>
-          <Features />
+          <FeaturesSection data={fetchedData.attributes.featuresImage.data} />
         </section>
-
         <section className="container flex flex-col">
           <BigText position="end">Lerne uns Kennen!</BigText>
           <Team />
         </section>
-
         <section>
           <Stats />
         </section>
-
         <section className="container">
           <BigText>Frisch aus der Redaktion</BigText>
           <BlogPosts />
         </section>
-
         <section className="container">
           <BigText position="end">Was der Pöbel sagt</BigText>
           <div className="flex flex-wrap lg:flex-nowrap lg:gap-8 px-8">
@@ -67,22 +70,16 @@ export async function getStaticProps() {
   return { props: { fetchedData: data } };
 }
 
-function LogoGrid() {
+function LogoGrid({ data }) {
+  console.log(data);
   return (
     <div>
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <h2 className="text-center text-lg font-semibold leading-8 text-gray-900">Unsere Kunden sind nicht nur unsere Kunden, sondern unsere Partner</h2>
+        <h2 className="text-center text-lg font-semibold leading-8 text-gray-900">Unsere Kunden sind nicht nur unsere Kunden, sondern auch gleichzeitig unsere Partner!</h2>
         <div className="mx-auto mt-10 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-5">
-          <Image className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/transistor-logo-gray-900.svg" alt="Transistor" width={158} height={48} />
-          <Image className=" col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/reform-logo-gray-900.svg" alt="Reform" width={158} height={48} />
-          <Image className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
-          <Image className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
-          <Image className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
-          <Image className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
-          <Image className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
-          <Image className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width={158} height={48} />
-          <Image className="col-span-2 max-h-12 w-full object-contain sm:col-start-2 lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/savvycal-logo-gray-900.svg" alt="SavvyCal" width={158} height={48} />
-          <Image className="col-span-2 col-start-2 max-h-12 w-full object-contain sm:col-start-auto lg:col-span-1" src="https://tailwindui.com/img/logos/158x48/statamic-logo-gray-900.svg" alt="Statamic" width={158} height={48} />
+          {data.map((tmp) => (
+            <img loading="lazy" key={tmp.id} className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src={baseURL + tmp.attributes.url} alt={tmp.attributes.alternativeText} width={158} height={48} />
+          ))}
         </div>
       </div>
     </div>
@@ -92,31 +89,35 @@ function LogoGrid() {
 const features = [
   {
     name: "Webdesign",
-    description: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
+    description: "Gutes Webdesign besticht dadurch, dass es die Aufmerksamkeit erregt und zugleich ein gewisses Maß an Information vermittelt! Wir achten bei unseren Designs sehr penibel darauf die optimale Conversion-Rate zu erzielen!",
     icon: "bi bi-pencil",
   },
   {
     name: "Webentwicklung",
-    description: "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.",
+    description: "Du benötigst zusätzliche Funktionen, die mit einer „normalen“ Webseite nicht mehr abgedeckt werden können? Wir beraten dich gerne und liefern Lösungen die für deine technischen Anforderungen wie maßgeschneidert sind!",
     icon: "bi bi-code-slash",
   },
   {
     name: "Content-Management-Systeme",
-    description: "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
+    description:
+      "WordPress bietet die perfekte Plattform für Webseiten und Webshops. Als Agentur beschäftigen wir uns selbstverständlich sehr viel mit WordPress. Es existiert aber nicht nur Wordpress in der Welt der CM-Systeme. Wir bauen sehr viel auf schnelle, skalierbare headless Lösungen!",
     icon: "bi bi-file-earmark",
   },
 ];
 
-function Features() {
+function FeaturesSection({ data }) {
   return (
-    <div className="overflow-hidden py-24 sm:py-32">
+    <div className="overflow-hidden sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
           <div className="lg:pr-8 lg:pt-4">
             <div className="lg:max-w-lg">
-              <h2 className="text-lg font-semibold leading-8 tracking-tight text-primary">Deploy faster</h2>
-              <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">A better workflow</p>
-              <p className="mt-6 text-lg leading-8 text-gray-600">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.</p>
+              <h2 className="text-lg font-semibold leading-8 tracking-tight text-primary">Do more!</h2>
+              <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Do it faster!</p>
+              <p className="mt-6 text-lg leading-8 text-gray-600">
+                Wir unterteilen unsere Leistungen in zwei Sparten: „Craft“ und „Design“. Hauptsächlich erledigen wir unsere Arbeiten in Kombination mit dem web. D.h.: Unsere Kerngebiete sind Webentwicklung und Webdesign. Allerdings machen wir auch
+                gerne mal Ausnahmen und entwerfen Printmedien oder gestalten zb Logos!
+              </p>
               <dl className="mt-10 max-w-xl space-y-8 text-base leading-7 text-gray-600 lg:max-w-none">
                 {features.map((feature) => (
                   <div key={feature.name} className="relative pl-9">
@@ -130,13 +131,7 @@ function Features() {
               </dl>
             </div>
           </div>
-          <Image
-            src="https://cms.web-craft.design/uploads/dark_project_app_screenshot_438a71cb88.png"
-            alt="Product screenshot"
-            className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
-            width={2432}
-            height={1442}
-          />
+          <img src={baseURL + data.attributes.url} alt="Product screenshot" className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0" width={2432} height={1442} />
         </div>
       </div>
     </div>
@@ -145,31 +140,31 @@ function Features() {
 
 const people = [
   {
-    name: "Leslie Alexander",
-    role: "Co-Founder / CEO",
+    name: "Wolfgang Hartl",
+    role: "Webentwicklung & UX-Design",
     imageUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80",
-    bio: "Ultricies massa malesuada viverra cras lobortis. Tempor orci hac ligula dapibus mauris sit ut eu. Eget turpis urna maecenas cras. Nisl dictum.",
+    bio: "Moderne Technologien liegen ihm am Herzen. Dabei entstehen coole Workflows, intuitive Apps und viele tolle Webseiten!",
     twitterUrl: "#",
     linkedinUrl: "#",
   },
   {
     name: "Daniela Haider",
-    role: "Print- & Webdesign",
+    role: "UI-Design, Print- und Webdesign",
     imageUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80",
-    bio: "Ultricies massa malesuada viverra cras lobortis. Tempor orci hac ligula dapibus mauris sit ut eu. Eget turpis urna maecenas cras. Nisl dictum.",
+    bio: "Mit dem Auge für die schönen Dinge kreiiert Daniela Interfaces und Webseiten auf denen man sich gerne aufhält!",
     twitterUrl: "#",
     linkedinUrl: "#",
   },
   // More people...
 ];
 
-function Team() {
+function Team({ data }) {
   return (
     <div className="bg-white py-24 md:py-32">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-y-20 gap-x-8 px-6 lg:px-8 xl:grid-cols-5">
         <div className="max-w-2xl xl:col-span-2">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">About the team</h2>
-          <p className="mt-6 text-lg leading-8 text-gray-600">We’re a dynamic group of individuals who are passionate about what we do and dedicated to delivering the best results for our clients.</p>
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Über das Team</h2>
+          <p className="mt-6 text-lg leading-8 text-gray-600">Lerne uns kennen! Wir sind ein kleines, aber feines Team aus Personen mit der selben Leidenschaft - coole Dinge entstehen zu lassen!</p>
         </div>
         <ul role="list" className="-mt-12 space-y-12 divide-y divide-gray-200 xl:col-span-3">
           {people.map((person) => (

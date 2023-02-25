@@ -1,18 +1,14 @@
 import moment from "moment";
 
 export default function ReviewGrid({ data }) {
-  console.log(data);
   var dataLength = data.length;
 
   function modifyGrid(length, index) {
-    console.log(data.length - 1);
-    console.log(index);
     if (index == dataLength - 1) {
       if (index % 2 != 0) return "lg:col-span-2";
     }
 
     if (length < 250) return "";
-    console.log("Größer als 300");
 
     dataLength++;
 
