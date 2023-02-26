@@ -3,6 +3,12 @@ import Image from "next/image";
 import { getData } from "@/utils/db-queries/getData";
 import ReviewGrid from "@/components/reviews/ReviewGrid.js";
 import BigText from "@/components/gsap/BigText.js";
+import HeroBlock from "@/components/blocks/HeroBlock.js";
+import LogoGrid from "@/components/blocks/LogoGrid.js";
+import FeaturesSection from "@/components/blocks/FeaturesSection.js";
+import TeamSection from "@/components/blocks/TeamSection.js";
+import UspSection from "@/components/blocks/UspSection.js";
+import BlogPosts from "@/components/blogPosts/BlogPosts.js";
 
 const baseURL = "https://cms.web-craft.design/";
 
@@ -17,34 +23,25 @@ export default function Home({ fetchedData }) {
       </Head>
 
       <main className="overflow-hidden">
-        <div className="container-fluid flex flex-col relative justify-end md:h-[90vh] items-center">
-          <video autoPlay muted loop className=" w-full h-full object-cover md:absolute top-0 left-0" src={baseURL + fetchedData.attributes.heroVideo.data.attributes.url}></video>
-          <div className=" w-[40% md:-mt-20 p-5 md:p-10 text-center z-10">
-            <h1 className="text-primary-300 uppercase font-bold">web-design & web-entwicklung</h1>
-            <p className="md:text-white text-3xl md:text-5xl uppercase font-medium">web-craft.design</p>
-          </div>
-        </div>
+        <HeroBlock data={fetchedData.attributes.hero} />
 
         <section className="container py-40">
-          <LogoGrid data={fetchedData.attributes.logoGrid.data} />
+          <LogoGrid data={fetchedData.attributes.logoGrid} />
         </section>
         <section className="container">
-          <BigText>Modernstes Techstack trifft Design</BigText>
-          <FeaturesSection data={fetchedData.attributes.featuresImage.data} />
+          <FeaturesSection data={fetchedData.attributes.features} />
         </section>
         <section className="container flex flex-col">
-          <BigText position="end">Lerne uns Kennen!</BigText>
-          <Team />
+          <TeamSection data={fetchedData.attributes.team} />
         </section>
         <section>
-          <Stats />
+          <UspSection data={fetchedData.attributes.usp} />
         </section>
         <section className="container">
-          <BigText>Frisch aus der Redaktion</BigText>
           <BlogPosts />
         </section>
         <section className="container">
-          <BigText position="end">Was der Pöbel sagt</BigText>
+          <BigText position="end">Was zufriedene Kunden sagen</BigText>
           <div className="flex flex-wrap lg:flex-nowrap lg:gap-8 px-8">
             <div className="min-w-full md:min-w-[25%]">
               <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Rezensionen</h2>
@@ -62,344 +59,10 @@ export default function Home({ fetchedData }) {
 export async function getStaticProps() {
   //const data = await getDataBySlug("/rezensionen", params.slug);
   const data = await getData("/home?populate=deep");
-  const reviews = await getData("/rezensionen");
+  const reviews = await getData("/rezensionen?sort=reviewDate:DESC");
 
   data.reviews = reviews;
   //console.log(data);
   // Pass post data to the page via props
   return { props: { fetchedData: data } };
-}
-
-function LogoGrid({ data }) {
-  console.log(data);
-  return (
-    <div>
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <h2 className="text-center text-lg font-semibold leading-8 text-gray-900">Unsere Kunden sind nicht nur unsere Kunden, sondern auch gleichzeitig unsere Partner!</h2>
-        <div className="mx-auto mt-10 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10 lg:mx-0 lg:max-w-none lg:grid-cols-5">
-          {data.map((tmp) => (
-            <img loading="lazy" key={tmp.id} className="col-span-2 max-h-12 w-full object-contain lg:col-span-1" src={baseURL + tmp.attributes.url} alt={tmp.attributes.alternativeText} width={158} height={48} />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const features = [
-  {
-    name: "Webdesign",
-    description: "Gutes Webdesign besticht dadurch, dass es die Aufmerksamkeit erregt und zugleich ein gewisses Maß an Information vermittelt! Wir achten bei unseren Designs sehr penibel darauf die optimale Conversion-Rate zu erzielen!",
-    icon: "bi bi-pencil",
-  },
-  {
-    name: "Webentwicklung",
-    description: "Du benötigst zusätzliche Funktionen, die mit einer „normalen“ Webseite nicht mehr abgedeckt werden können? Wir beraten dich gerne und liefern Lösungen die für deine technischen Anforderungen wie maßgeschneidert sind!",
-    icon: "bi bi-code-slash",
-  },
-  {
-    name: "Content-Management-Systeme",
-    description:
-      "WordPress bietet die perfekte Plattform für Webseiten und Webshops. Als Agentur beschäftigen wir uns selbstverständlich sehr viel mit WordPress. Es existiert aber nicht nur Wordpress in der Welt der CM-Systeme. Wir bauen sehr viel auf schnelle, skalierbare headless Lösungen!",
-    icon: "bi bi-file-earmark",
-  },
-];
-
-function FeaturesSection({ data }) {
-  return (
-    <div className="overflow-hidden sm:py-32">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
-          <div className="lg:pr-8 lg:pt-4">
-            <div className="lg:max-w-lg">
-              <h2 className="text-lg font-semibold leading-8 tracking-tight text-primary">Do more!</h2>
-              <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Do it faster!</p>
-              <p className="mt-6 text-lg leading-8 text-gray-600">
-                Wir unterteilen unsere Leistungen in zwei Sparten: „Craft“ und „Design“. Hauptsächlich erledigen wir unsere Arbeiten in Kombination mit dem web. D.h.: Unsere Kerngebiete sind Webentwicklung und Webdesign. Allerdings machen wir auch
-                gerne mal Ausnahmen und entwerfen Printmedien oder gestalten zb Logos!
-              </p>
-              <dl className="mt-10 max-w-xl space-y-8 text-base leading-7 text-gray-600 lg:max-w-none">
-                {features.map((feature) => (
-                  <div key={feature.name} className="relative pl-9">
-                    <dt className="inline font-semibold text-gray-900">
-                      <i className={`absolute top-1 left-1 text-lg text-primary-300 ${feature.icon}`} aria-hidden="true" />
-                      {feature.name}
-                    </dt>{" "}
-                    <dd className="inline">{feature.description}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-          </div>
-          <img src={baseURL + data.attributes.url} alt="Product screenshot" className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0" width={2432} height={1442} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const people = [
-  {
-    name: "Wolfgang Hartl",
-    role: "Webentwicklung & UX-Design",
-    imageUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80",
-    bio: "Moderne Technologien liegen ihm am Herzen. Dabei entstehen coole Workflows, intuitive Apps und viele tolle Webseiten!",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  {
-    name: "Daniela Haider",
-    role: "UI-Design, Print- und Webdesign",
-    imageUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80",
-    bio: "Mit dem Auge für die schönen Dinge kreiiert Daniela Interfaces und Webseiten auf denen man sich gerne aufhält!",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  // More people...
-];
-
-function Team({ data }) {
-  return (
-    <div className="bg-white py-24 md:py-32">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-y-20 gap-x-8 px-6 lg:px-8 xl:grid-cols-5">
-        <div className="max-w-2xl xl:col-span-2">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Über das Team</h2>
-          <p className="mt-6 text-lg leading-8 text-gray-600">Lerne uns kennen! Wir sind ein kleines, aber feines Team aus Personen mit der selben Leidenschaft - coole Dinge entstehen zu lassen!</p>
-        </div>
-        <ul role="list" className="-mt-12 space-y-12 divide-y divide-gray-200 xl:col-span-3">
-          {people.map((person) => (
-            <li key={person.name} className="flex flex-col gap-10 pt-12 sm:flex-row">
-              <img className="aspect-[4/5] w-52 flex-none rounded-2xl object-cover" src={person.imageUrl} alt="" />
-              <div className="max-w-xl flex-auto">
-                <h3 className="text-lg font-semibold leading-8 tracking-tight text-gray-900">{person.name}</h3>
-                <p className="text-base leading-7 text-gray-600">{person.role}</p>
-                <p className="mt-6 text-base leading-7 text-gray-600">{person.bio}</p>
-                <ul role="list" className="mt-6 flex gap-x-6">
-                  <li>
-                    <a href={person.twitterUrl} className="text-gray-400 hover:text-gray-500">
-                      <span className="sr-only">Twitter</span>
-                      <svg className="h-5 w-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84" />
-                      </svg>
-                    </a>
-                  </li>
-                  <li>
-                    <a href={person.linkedinUrl} className="text-gray-400 hover:text-gray-500">
-                      <span className="sr-only">LinkedIn</span>
-                      <svg className="h-5 w-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                          fillRule="evenodd"
-                          d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-}
-
-const stats = [
-  { id: 1, name: "Creators on the platform", value: "8,000+" },
-  { id: 2, name: "Flat platform fee", value: "3%" },
-  { id: 3, name: "Uptime guarantee", value: "99.9%" },
-  { id: 4, name: "Paid out to creators", value: "$70M" },
-];
-
-function Stats() {
-  return (
-    <div className="relative isolate overflow-hidden bg-gray-900 py-24 sm:py-32">
-      <img
-        src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2850&q=80&blend=111827&blend-mode=multiply&sat=-100&exp=15"
-        alt=""
-        className="absolute inset-0 -z-10 h-full w-full object-cover"
-      />
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-        <svg viewBox="0 0 1266 975" aria-hidden="true" className="absolute -bottom-8 -left-96 -z-10 w-[79.125rem] transform-gpu blur-3xl sm:-left-40 sm:-bottom-64 lg:left-8 lg:-bottom-32 xl:-left-10">
-          <path
-            fill="url(#05f95398-6ec0-404d-8f7d-a69a4504684d)"
-            fillOpacity=".2"
-            d="M347.52 746.149 223.324 974.786 0 630.219l347.52 115.93 223.675-411.77c1.431 190.266 49.389 498.404 229.766 208.829C1026.43 181.239 966.307-135.484 1129.51 59.422c130.55 155.925 143.15 424.618 133.13 539.473L936.67 429.884l23.195 520.539L347.52 746.149Z"
-          />
-          <defs>
-            <linearGradient id="05f95398-6ec0-404d-8f7d-a69a4504684d" x1="1265.86" x2="-162.888" y1=".254" y2="418.947" gradientUnits="userSpaceOnUse">
-              <stop stopColor="#776FFF" />
-              <stop offset={1} stopColor="#FF4694" />
-            </linearGradient>
-          </defs>
-        </svg>
-        <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl">
-          <h2 className="text-base font-semibold leading-8 text-indigo-400">Our track record</h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">Trusted by thousands of creators&nbsp;worldwide</p>
-          <p className="mt-6 text-lg leading-8 text-gray-300">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.</p>
-        </div>
-        <dl className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-10 text-white sm:mt-20 sm:grid-cols-2 sm:gap-y-16 lg:mx-0 lg:max-w-none lg:grid-cols-4">
-          {stats.map((stat) => (
-            <div key={stat.id} className="flex flex-col gap-y-3 border-l border-white/10 pl-6">
-              <dt className="text-sm leading-6">{stat.name}</dt>
-              <dd className="order-first text-3xl font-semibold tracking-tight">{stat.value}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-    </div>
-  );
-}
-
-const posts = [
-  {
-    title: "Boost your conversion rate",
-    href: "#",
-    category: { name: "Article", href: "#", color: "bg-indigo-100 text-indigo-800" },
-    description: "Nullam risus blandit ac aliquam justo ipsum. Quam mauris volutpat massa dictumst amet. Sapien tortor lacus arcu.",
-    date: "Mar 16, 2020",
-    datetime: "2020-03-16",
-    author: {
-      name: "Paul York",
-      href: "#",
-      imageUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-    readingTime: "6 min",
-  },
-  {
-    title: "How to use search engine optimization to drive sales",
-    href: "#",
-    category: { name: "Video", href: "#", color: "bg-pink-100 text-pink-800" },
-    description: "Nullam risus blandit ac aliquam justo ipsum. Quam mauris volutpat massa dictumst amet. Sapien tortor lacus arcu.",
-    date: "Mar 10, 2020",
-    datetime: "2020-03-10",
-    author: {
-      name: "Dessie Ryan",
-      href: "#",
-      imageUrl: "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-    readingTime: "4 min",
-  },
-  {
-    title: "Improve your customer experience",
-    href: "#",
-    category: { name: "Case Study", href: "#", color: "bg-green-100 text-green-800" },
-    description: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab iure iusto fugiat commodi sequi.",
-    date: "Feb 12, 2020",
-    datetime: "2020-02-12",
-    author: {
-      name: "Easer Collins",
-      href: "#",
-      imageUrl: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    },
-    readingTime: "11 min",
-  },
-];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-function BlogPosts() {
-  return (
-    <div className="bg-white px-6 pb-20 lg:px-8 lg:pb-28">
-      <div className="relative mx-auto max-w-lg divide-y-2 divide-gray-200 lg:max-w-7xl">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Recent publications</h2>
-          <p className="mt-3 text-xl text-gray-500 sm:mt-4">Nullam risus blandit ac aliquam justo ipsum. Quam mauris volutpat massa dictumst amet. Sapien tortor lacus arcu.</p>
-        </div>
-        <div className="mt-12 grid gap-16 pt-12 lg:grid-cols-3 lg:gap-x-5 lg:gap-y-12">
-          {posts.map((post) => (
-            <div key={post.title}>
-              <div>
-                <a href={post.category.href} className="inline-block">
-                  <span className={classNames(post.category.color, "inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium")}>{post.category.name}</span>
-                </a>
-              </div>
-              <a href={post.href} className="mt-4 block">
-                <p className="text-xl font-semibold text-gray-900">{post.title}</p>
-                <p className="mt-3 text-base text-gray-500">{post.description}</p>
-              </a>
-              <div className="mt-6 flex items-center">
-                <div className="flex-shrink-0">
-                  <a href={post.author.href}>
-                    <span className="sr-only">{post.author.name}</span>
-                    <img className="h-10 w-10 rounded-full" src={post.author.imageUrl} alt="" />
-                  </a>
-                </div>
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-900">
-                    <a href={post.author.href}>{post.author.name}</a>
-                  </p>
-                  <div className="flex space-x-1 text-sm text-gray-500">
-                    <time dateTime={post.datetime}>{post.date}</time>
-                    <span aria-hidden="true">&middot;</span>
-                    <span>{post.readingTime} read</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const reviews = [
-  {
-    name: "Emma Dorsey",
-    role: "Senior Developer",
-    imageUrl: "https://images.unsplash.com/photo-1505840717430-882ce147ef2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80",
-    bio: "Praesentium iure error aliquam voluptas ut libero. Commodi placeat sit iure nulla officiis. Ut ex sit repellat tempora. Qui est accusamus exercitationem natus ut voluptas. Officiis velit eos ducimus.",
-    twitterUrl: "#",
-    linkedinUrl: "#",
-  },
-  // More people...
-];
-
-function Reviews() {
-  return (
-    <div className="bg-white py-24 md:py-32 lg:py-40">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-y-20 gap-x-8 xl:grid-cols-3">
-        <div className="mx-auto max-w-2xl lg:mx-0">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Rezensionen</h2>
-          <p className="mt-6 text-lg leading-8 text-gray-600">Was zufriedene Kunden und Partner über uns berichten:</p>
-        </div>
-        <ul role="list" className="mx-auto grid max-w-2xl grid-cols-1 gap-x-6 gap-y-20 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:gap-x-8 xl:col-span-2">
-          {reviews.map((review) => (
-            <li key={review.name}>
-              <img className="aspect-[3/2] w-full rounded-2xl object-cover" src={review.imageUrl} alt="" />
-              <h3 className="mt-6 text-lg font-semibold leading-8 text-gray-900">{review.name}</h3>
-              <p className="text-base leading-7 text-gray-600">{review.role}</p>
-              <p className="mt-4 text-base leading-7 text-gray-600">{review.bio}</p>
-              <ul role="list" className="mt-6 flex gap-x-6">
-                <li>
-                  <a href={review.twitterUrl} className="text-gray-400 hover:text-gray-500">
-                    <span className="sr-only">Twitter</span>
-                    <svg className="h-5 w-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M6.29 18.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0020 3.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.073 4.073 0 01.8 7.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 010 16.407a11.616 11.616 0 006.29 1.84" />
-                    </svg>
-                  </a>
-                </li>
-                <li>
-                  <a href={review.linkedinUrl} className="text-gray-400 hover:text-gray-500">
-                    <span className="sr-only">LinkedIn</span>
-                    <svg className="h-5 w-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fillRule="evenodd"
-                        d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </a>
-                </li>
-              </ul>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
 }

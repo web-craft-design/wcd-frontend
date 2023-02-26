@@ -8,7 +8,7 @@ export default function ReviewGrid({ data }) {
       if (index % 2 != 0) return "lg:col-span-2";
     }
 
-    if (length < 250) return "";
+    if (length < 350) return "lg:col-span-1";
 
     dataLength++;
 
@@ -27,14 +27,14 @@ export default function ReviewGrid({ data }) {
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
         {data.map((review, index) => (
-          <div key={review.id} className={`shadow-lg p-3 lg:p-10 ${modifyGrid(review.attributes.content.length, index)}`}>
+          <div key={review.id} className={`shadow-lg p-3 lg:p-10 ${modifyGrid(review.attributes.review.length, index)}`}>
             <p className="mb-3">{moment(review.attributes.reviewDate).format("DD.MM.Y")}</p>
             <p className="text-lg font-semibold">
               {review.attributes.firstName + " "}
               {review.attributes.lastName} aus {review.attributes.city}
             </p>
             <p className="mb-3 text-primary-300">{review.attributes.companyName}</p>
-            <p className="text-justify">{review.attributes.content}</p>
+            <p className="text-justify">{review.attributes.review}</p>
           </div>
         ))}
       </div>

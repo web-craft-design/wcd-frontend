@@ -1,9 +1,10 @@
-const baseurl = "https://cms.web-craft.design/api";
+export const baseURL = "https://cms.web-craft.design";
+const api = baseURL + "/api";
 
 export async function getData(endpoint) {
-  const res = await fetch(baseurl + endpoint);
+  const res = await fetch(api + endpoint);
 
-  console.log(baseurl + endpoint);
+  console.log(api + endpoint);
   //console.log(res);
   if (!res.ok) {
     return false;
