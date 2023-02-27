@@ -1,12 +1,9 @@
 import { baseURL } from "@/utils/db-queries/getData";
-import BigText from "@/components/gsap/BigText";
 
 export default function FeaturesSection({ data }) {
   return (
     <>
-      <BigText>Modernstes Techstack trifft Design</BigText>
-
-      <div className="overflow-hidden sm:py-32">
+      <div className="overflow-hidden">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto grid max-w-2xl grid-cols-1 gap-y-16 gap-x-8 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
             <div className="lg:pr-8 lg:pt-4">

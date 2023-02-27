@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Image from "next/image";
 import { getData } from "@/utils/db-queries/getData";
 import ReviewGrid from "@/components/reviews/ReviewGrid.js";
 import BigText from "@/components/gsap/BigText.js";
@@ -25,23 +24,36 @@ export default function Home({ fetchedData }) {
       <main className="overflow-hidden">
         <HeroBlock data={fetchedData.attributes.hero} />
 
-        <section className="container py-40">
+        <section className="container py-10 lg:py-20">
           <LogoGrid data={fetchedData.attributes.logoGrid} />
         </section>
-        <section className="container">
+
+        <BigText>Modernstes Techstack trifft Design</BigText>
+        <section className="container py-10 lg:py-20">
           <FeaturesSection data={fetchedData.attributes.features} />
         </section>
-        <section className="container flex flex-col">
+
+        <BigText position="end">Lerne uns Kennen!</BigText>
+        <section className="container flex flex-col py-10 lg:py-20">
           <TeamSection data={fetchedData.attributes.team} />
         </section>
-        <section>
+
+        <section className="py-10 lg:py-20">
           <UspSection data={fetchedData.attributes.usp} />
         </section>
-        <section className="container">
-          <BlogPosts />
-        </section>
-        <section className="container">
-          <BigText position="end">Was zufriedene Kunden sagen</BigText>
+
+        {/* BLOG POSTS: TODO: Schnittstelle noch anpassen */}
+        {fetchedData.attributes.posts && (
+          <>
+            <BigText>Frisch aus der Redaktion</BigText>
+            <section className="container py-10 lg:py-20">
+              <BlogPosts />
+            </section>
+          </>
+        )}
+
+        <BigText position="end">Was zufriedene Kunden sagen</BigText>
+        <section className="container py-10 lg:py-20">
           <div className="flex flex-wrap lg:flex-nowrap lg:gap-8 px-8">
             <div className="min-w-full md:min-w-[25%]">
               <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Rezensionen</h2>

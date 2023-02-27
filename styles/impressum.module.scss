@@ -1,0 +1,17 @@
+.table {
+  width: 100%;
+  text-align: left;
+  tr:nth-child(2n + 1) {
+    background-color: rgb(234, 234, 234);
+  }
+
+  th,
+  td {
+    padding: 16px;
+  }
+
+  th {
+    min-width: 40%;
+    font-weight: 400;
+  }
+}

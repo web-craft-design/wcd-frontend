@@ -1,5 +1,4 @@
 import { baseURL } from "@/utils/db-queries/getData";
-import BigText from "@/components/gsap/BigText";
 
 const posts = [
   {
@@ -55,7 +54,6 @@ export default function BlogPosts({ data }) {
 
   return (
     <>
-      <BigText>Frisch aus der Redaktion</BigText>
       <div className="bg-white px-6 pb-20 lg:px-8 lg:pb-28">
         <div className="relative mx-auto max-w-lg divide-y-2 divide-gray-200 lg:max-w-7xl">
           <div>
